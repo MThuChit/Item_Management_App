@@ -32,16 +32,16 @@ function ItemManager() {
     }
 
     const newItem = {
-      id: Date.now(), // Simple unique ID
+      id: items.length + 1,
       name: name,
       categoryId: categoryId,
       price: price.toFixed(2)
     };
 
     setItems([...items, newItem]);
-    setErrorMsg(""); // Clear error on success
+    setErrorMsg("");
 
-    // Reset inputs
+    
     itemName.current.value = "";
     itemPrice.current.value = "";
   };
@@ -85,7 +85,9 @@ function ItemManager() {
               );
             })}
             <tr>
-              <td></td>
+              <td>
+
+              </td>
               <td>
                 <input type="text" ref={itemName} placeholder="Name" />
               </td>
