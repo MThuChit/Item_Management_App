@@ -67,6 +67,13 @@ function ItemManager () {
           </thead>
           <tbody>
             {
+
+                /*
+              * TODO: Your code goes here
+              * !!! IMPORTANT !!!
+              * - All items must be listed here (above the form row).
+              * - Your input form must be implemented as the LAST row in this table.
+              */
               items.map(item => (
                 <tr key={item.id}>
                   <td>{item.id}</td>
