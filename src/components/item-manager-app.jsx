@@ -1,5 +1,4 @@
-import "./item-manager-app.css"
-
+import "./item-manager-app.css";
 import { useState, useRef } from "react";
 
 import deleteLogo from '../assets/delete.svg';
@@ -7,58 +6,59 @@ import stationaryLogo from '../assets/ink_pen.svg';
 import kitchenwareLogo from "../assets/flatware.svg";
 import applianceLogo from "../assets/electrical_services.svg";
 
-function ItemManager () {
-    const Name = [
-        { id: 1, name: "Stationery", logo: stationaryLogo },
-        { id: 2, name: "Kitchenware", logo: kitchenwareLogo },
-        { id: 3, name: "Appliances", logo: applianceLogo },
-    ];
+function ItemManager() {
+  const categories = [
+    { id: 1, name: "Stationery", logo: stationaryLogo },
+    { id: 2, name: "Kitchenware", logo: kitchenwareLogo },
+    { id: 3, name: "Appliances", logo: applianceLogo },
+  ];
 
-    const categories = Name;
+  const [items, setItems] = useState([]);
+  const [errorMsg, setErrorMsg] = useState("");
 
+  const itemName = useRef(null);
+  const itemCategory = useRef(null);
+  const itemPrice = useRef(null);
 
-  /*
-   * !!! IMPORTANT !!!
-   * - You MUST use the given states and refs in your code.
-   * - You MAY add additional state, refs, and variables if needed.
-   */
-    
+  const handleAddItem = () => {
+    const name = itemName.current.value.trim();
+    const categoryId = parseInt(itemCategory.current.value);
+    const price = parseFloat(itemPrice.current.value);
 
+    // Basic Validation
+    if (!name || isNaN(price)) {
+      setErrorMsg("Please enter a valid name and price.");
+      return;
+    }
 
-    const [items, setItems] = useState([]);
-    const [errorMsg, setErrorMsg] = useState("");
+    const newItem = {
+      id: Date.now(), // Simple unique ID
+      name: name,
+      categoryId: categoryId,
+      price: price.toFixed(2)
+    };
 
-  // You must use this ref for the item name input
+    setItems([...items, newItem]);
+    setErrorMsg(""); // Clear error on success
 
+    // Reset inputs
+    itemName.current.value = "";
+    itemPrice.current.value = "";
+  };
 
-    const itemName = useRef(null);
-    const itemCategory = useRef(null);
-    const itemPrice = useRef(null);
-    const handleDeleteItem = (id) => {
-        setItems(items.filter(item => item.id !== id));
-        }
-  
-
-  //TODO: Your code goes here
-  /*
-   * !!! IMPORTANT !!!
-   * - Implement your output based on the given sample layout.
-   * - The id and className attributes below MUST be preserved.
-   * - Your CSS MUST use the existing id and className selectors.
-   */
-
-    
+  const handleDeleteItem = (id) => {
+    setItems(items.filter(item => item.id !== id));
+  };
 
   return (
     <>
-      <div id="h1">
-        Item Management
-      </div>
+      <div id="h1">Item Management</div>
       <div id="data-area">
         <table id="item-table" className="item-table">
           <thead>
             <tr>
               <th id="col-item-id">ID</th>
+
               <th id="col-item-name">Name</th>
               <th id="col-item-category">Category</th>
               <th id="col-item-price">Price</th>
@@ -66,60 +66,51 @@ function ItemManager () {
             </tr>
           </thead>
           <tbody>
-            {
-
-                /*
-              * TODO: Your code goes here
-              * !!! IMPORTANT !!!
-              * - All items must be listed here (above the form row).
-              * - Your input form must be implemented as the LAST row in this table.
-              */
-              items.map(item => (
+            {items.map((item) => {
+              const cat = categories.find(c => c.id === item.categoryId);
+              return (
                 <tr key={item.id}>
                   <td>{item.id}</td>
                   <td>{item.name}</td>
-                  <td>{categories.find(cat => cat.id === item.categoryId)?.name}</td>
-                  <td>{item.price}</td>
+                  <td>
+                    <img src={cat?.logo} alt={cat?.name} width="20" /> {cat?.name}
+                  </td>
+                  <td>${item.price}</td>
                   <td>
                     <button onClick={() => handleDeleteItem(item.id)}>
-                      <img src="/assets/delete.svg" alt="Delete" />
+                      <img src={deleteLogo} alt="Delete" width="16" />
                     </button>
                   </td>
                 </tr>
-              ))
-            }
-            {
-              <tr>
-                <td></td>
-                <td>
-                  <input type="text" ref={itemName} placeholder="Name" />
-                </td>
-                <td>
-                  <select ref={itemCategory}>
-                    {Name.map(cat => (
-                      <option key={cat.id} value={cat.id}>{cat.name}</option>
-                    ))}
-                  </select>
-                </td>
-                <td>
-                  <input type="number" ref={itemPrice} placeholder="Price" />
-                </td>
-                <td>
-                  <button onClick={handleAddItem}>Add Item</button>
-                </td>
-              </tr>
-              }
+              );
+            })}
+            <tr>
+              <td></td>
+              <td>
+                <input type="text" ref={itemName} placeholder="Name" />
+              </td>
+              <td>
+                <select ref={itemCategory}>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+              </td>
+              <td>
+                <input type="number" ref={itemPrice} placeholder="Price" />
+              </td>
+              <td>
+                <button onClick={handleAddItem}>Add Item</button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
-      <div id="error-message">
-         {
-           /* You MUST display the errorMsg state here. */
-           errorMsg && <p>{errorMsg}</p>
-         }
+      <div id="error-msg"> {/* Matching CSS id */}
+        {errorMsg}
       </div>
     </>
   );
 }
 
-export default ItemManager
+export default ItemManager;

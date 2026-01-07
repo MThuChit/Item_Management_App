@@ -1,14 +1,13 @@
 import ItemManager from "./components/item-manager-app.jsx";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/ItemManager" element={<ItemManager />} />
-        <Route path="*" element={<Navigate to="/ItemManager" />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<ItemManager />} />
+      {/* Redirect unknown paths to root */}
+      <Route path="*" element={<Navigate to="/" />} /> 
+    </Routes>
   );
 }
 
